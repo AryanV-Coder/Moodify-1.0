@@ -150,11 +150,52 @@ analyzeBtn.addEventListener('click', async () => {
         
         // Get response text
         const data = await response.json();
-        const resultText = data.response || JSON.stringify(data);
         
-        // Display result
-        outputContent.innerHTML = resultText;
+        // Extract data from response
+        const mood = data.song_mood || 'UNKNOWN';
+        const message = data.message || 'Mood detected!';
+        const songName = data.song_name || 'No song available';
+        const songLink = data.song_link || '';
+        
+        // Get mood emoji
+        const moodEmoji = getMoodEmoji(mood);
+        
+        // Display result with proper formatting
+        outputContent.innerHTML = `
+            <div style="text-align: center; padding: 10px;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">
+                    ${moodEmoji}
+                </div>
+                <div style="font-size: 1.4rem; font-weight: bold; color: #1db954; margin-bottom: 15px;">
+                    ${mood}
+                </div>
+                <div style="font-size: 1.1rem; color: #fff; margin-bottom: 20px; line-height: 1.5;">
+                    ${message}
+                </div>
+                <div style="background: #282828; padding: 15px; border-radius: 12px; margin-top: 15px;">
+                    <div style="font-size: 0.9rem; color: #888; margin-bottom: 8px;">Now Playing:</div>
+                    <div style="font-size: 1.2rem; font-weight: 600; color: #1db954; margin-bottom: 12px;">
+                        🎵 ${songName}
+                    </div>
+                    ${songLink ? `
+                        <a href="${songLink}" target="_blank" 
+                           style="display: inline-block; background: #1db954; color: #000; 
+                                  padding: 10px 24px; border-radius: 25px; text-decoration: none; 
+                                  font-weight: 600; transition: all 0.2s ease;">
+                            ▶️ Play Song
+                        </a>
+                    ` : ''}
+                </div>
+            </div>
+        `;
         outputContent.style.display = 'block';
+        
+        // Automatically open the song link in a new tab
+        if (songLink) {
+            setTimeout(() => {
+                window.open(songLink, '_blank');
+            }, 1000);
+        }
         
     } catch (error) {
         console.error('Error:', error);
@@ -180,3 +221,14 @@ analyzeBtn.addEventListener('click', async () => {
     
     analyzeBtn.disabled = false;
 });
+
+// Helper function to get emoji based on mood
+function getMoodEmoji(mood) {
+    const emojis = {
+        'HAPPY': '😊',
+        'SAD': '😢',
+        'LOVE': '❤️',
+        'ENERGETIC': '⚡'
+    };
+    return emojis[mood.toUpperCase()] || '😊';
+}

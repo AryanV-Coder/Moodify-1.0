@@ -5,6 +5,7 @@ import com.moodify.moodify.service.MoodType;
 import java.util.List;
 
 public class Playlist {
+
     private String name;
     private MoodType mood;
     private List<Song> songs;

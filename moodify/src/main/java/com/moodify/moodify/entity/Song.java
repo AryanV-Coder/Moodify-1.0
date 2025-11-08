@@ -2,17 +2,15 @@ package com.moodify.moodify.entity;
 
 import com.moodify.moodify.service.MoodType;
 
-import java.util.List;
-
 public class Song {
 
     private String name;
-    private List<MoodType> moods;
+    private MoodType mood;
     private String link;
 
-    public Song(String name, List<MoodType> moods, String link) {
+    public Song(String name, MoodType mood, String link) {
         this.name = name;
-        this.moods = moods;
+        this.mood = mood;
         this.link = link;
     }
 
@@ -20,8 +18,8 @@ public class Song {
         return name;
     }
 
-    public List<MoodType> getMoods() {
-        return moods;
+    public MoodType getMood() {
+        return mood;
     }
 
     public String getLink() {
