@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class AIServiceClient {
 
-    private static final String FASTAPI_URL = "https://moodify-fastapi-backend.vercel.app/mood-analysis";
+    private static final String FASTAPI_URL = "https://moodify-fastapi-backend.onrender.com/mood-analysis";
 
     public String getMoodFromImage(byte[] imageBytes, String origFilename) {
         try {
