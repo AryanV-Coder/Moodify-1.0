@@ -1,5 +1,5 @@
 // API endpoint - change this to your backend URL
-const API_URL = 'http://127.0.0.1:8080/api/analyse';
+const API_URL = 'https://moodify-springboot-backend.onrender.com/api/analyse';
 
 // Get elements
 const imageBox = document.getElementById('imageBox');
