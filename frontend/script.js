@@ -1,6 +1,24 @@
 // API endpoint - change this to your backend URL
 const API_URL = 'https://moodify-springboot-backend.onrender.com/api/analyse';
 
+// Wake up servers on page load
+window.addEventListener('load', () => {
+    console.log('🚀 Waking up servers...');
+
+    // Wake up FastAPI backend
+    fetch('https://moodify-fastapi-backend.onrender.com/start-server')
+        .then(res => res.json())
+        .then(data => console.log('✅ FastAPI server is awake:', data))
+        .catch(err => console.log('⚠️ FastAPI server warming up:', err.message));
+    
+    // Wake up Spring Boot backend
+    fetch('https://moodify-springboot-backend.onrender.com/api/health')
+        .then(res => res.json())
+        .then(data => console.log('✅ Spring Boot server is awake:', data))
+        .catch(err => console.log('⚠️ Spring Boot server warming up:', err.message));
+    
+});
+
 // Get elements
 const imageBox = document.getElementById('imageBox');
 const placeholder = document.getElementById('placeholder');
