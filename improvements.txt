@@ -1,0 +1,4 @@
+# To listen a song in the memory of someone
+1. Just upload that person's image.
+2. Enter text explaining what do you feel about that person.
+3. You will get a song accordingly.
