@@ -82,23 +82,86 @@ function playYouTubeVideo(videoId) {
             },
             events: {
                 'onReady': onPlayerReady,
-                'onError': onPlayerError
+                'onError': onPlayerError,
+                'onStateChange': onPlayerStateChange
             }
         });
         console.log('✅ YouTube player created successfully');
+        
+        // Set a timeout to check if video started playing
+        setTimeout(() => {
+            checkVideoPlayback(videoId);
+        }, 3000);
+        
     } catch (e) {
         console.error('❌ Error creating YouTube player:', e);
+        // If player creation fails, open YouTube directly
+        const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        console.log('🔄 Opening YouTube directly:', youtubeUrl);
+        window.open(youtubeUrl, '_blank');
     }
+}
+
+// Check if video is playing, if not redirect to YouTube
+function checkVideoPlayback(videoId) {
+    if (!player || typeof player.getPlayerState !== 'function') {
+        console.log('❌ Player not initialized properly, opening YouTube');
+        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+        return;
+    }
+    
+    const playerState = player.getPlayerState();
+    // -1 (unstarted), 0 (ended), 2 (paused), 3 (buffering), 5 (cued)
+    // 1 = playing
+    
+    if (playerState !== 1 && playerState !== 3) {
+        console.log(`⚠️ Video not playing (state: ${playerState}), opening YouTube`);
+        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+    } else {
+        console.log('✅ Video is playing successfully');
+    }
+}
+
+// Track player state changes
+function onPlayerStateChange(event) {
+    const states = {
+        '-1': 'unstarted',
+        '0': 'ended',
+        '1': 'playing',
+        '2': 'paused',
+        '3': 'buffering',
+        '5': 'cued'
+    };
+    console.log('📺 Player state:', states[event.data] || event.data);
 }
 
 function onPlayerReady(event) {
     console.log('✅ YouTube player is ready');
-    event.target.playVideo();
+    try {
+        event.target.playVideo();
+    } catch (e) {
+        console.error('❌ Error playing video:', e);
+    }
 }
 
 function onPlayerError(event) {
     console.error('YouTube player error:', event.data);
-    alert('Sorry, there was an error playing the video.');
+    
+    // Get the current video ID and construct YouTube URL
+    const videoId = player.getVideoData ? player.getVideoData().video_id : null;
+    
+    if (videoId) {
+        const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        console.log('🔄 Redirecting to YouTube:', youtubeUrl);
+        
+        // Show user-friendly message
+        alert('Unable to play video here. Opening YouTube in a new tab...');
+        
+        // Open YouTube in new tab
+        window.open(youtubeUrl, '_blank');
+    } else {
+        alert('Sorry, there was an error playing the video.');
+    }
 }
 
 // Wake up servers on page load
